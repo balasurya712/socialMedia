@@ -1,0 +1,4 @@
+1 million array size
+1 element contain 16 character
+1 character = 1 byte
+total size = 1000000 * 16 = 16 mb

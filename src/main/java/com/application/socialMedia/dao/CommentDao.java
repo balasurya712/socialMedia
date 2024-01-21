@@ -19,6 +19,7 @@ public class CommentDao {
     @Autowired
     MongoTemplate template;
 
+	/*this method use to delete comment */
     public void deleteComment(Comment comment) {
  
 		Criteria criteria = Criteria.where("postOrCommentId").is(comment.getPostOrCommentId()).andOperator(Criteria.where("pageId").is(comment.getPageId()));
@@ -27,6 +28,7 @@ public class CommentDao {
 
 	}
 
+	/*this method use to get the comment of particular post or comments*/
 	public List<Comment> getComment(String id) {
  
 		Criteria criteria = Criteria.where("postOrCommentId").is(id);
@@ -35,6 +37,7 @@ public class CommentDao {
 
 	}
 
+	/*increase the like count of the comment */
 	public void incLikeCount(String id) {
  
 		Criteria criteria = Criteria.where("_id").is(id);
@@ -45,6 +48,7 @@ public class CommentDao {
 		template.updateFirst(query, update, Comment.class);
 	}
 
+	/*increase the comment count of the comment */
     public void incCommentCount(String id) {
  
 		Criteria criteria = Criteria.where("_id").is(id);
@@ -55,6 +59,7 @@ public class CommentDao {
 		template.updateFirst(query, update, Comment.class);
 	}
 
+	/*decrease the like count of the comment */
     public void decLikeCount(String id) {
  
 		Criteria criteria = Criteria.where("_id").is(id);
@@ -65,6 +70,7 @@ public class CommentDao {
 		template.updateFirst(query, update, Comment.class);
 	}
 
+	/*decrease the comment count of the comment */
     public void decCommentCount(String id) {
  
 		Criteria criteria = Criteria.where("_id").is(id);
@@ -75,6 +81,7 @@ public class CommentDao {
 		template.updateFirst(query, update, Comment.class);
 	}
 
+	/*delete all the likes and comments relevant to the post which is deleted */
 	public void deleteAllLikesAndCommentByPostOrCommentId(String postOrcommentId){
 		Criteria criteria = Criteria.where("postOrCommentId").is(postOrcommentId);
 		Query query = new Query(criteria);

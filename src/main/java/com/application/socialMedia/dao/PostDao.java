@@ -88,6 +88,7 @@ public class PostDao {
 		return output;
 	}
 
+	/*delete all the post which is posted by a page */
 	public void deletePostByPageId(String id) {
  
 		Criteria criteria = Criteria.where("pageId").is(new ObjectId(id));

@@ -15,6 +15,7 @@ public class PostReportDao {
     @Autowired
     MongoTemplate template;
 
+    /*delete the post report */
     public void deleteByPostId(String id){
         Criteria criteria = Criteria.where("postId").is(new ObjectId(id));
 		Query query = new Query(criteria);

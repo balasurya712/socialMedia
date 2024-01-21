@@ -16,6 +16,7 @@ public class LikeDao {
     @Autowired
     MongoTemplate template;
 
+	/*delete like (works like unlike) */
     public void deleteLike(Like like) {
  
 		Criteria criteria = Criteria.where("postOrCommentId").is(like.getPostOrCommentId()).andOperator(Criteria.where("likedId").is(like.getLikedId()));
@@ -24,18 +25,13 @@ public class LikeDao {
 
 	}
 
+	/* get the liked page id's */
 	public List<Like> getLike(String id) {
  
 		Criteria criteria = Criteria.where("postOrCommentId").is(id);
 		Query query = new Query(criteria);
 		return template.find(query, Like.class);
 
-	}
-
-	public void deleteAllLikeByPostOrComment(String postOrCommentId){
-		Criteria criteria = Criteria.where("postOrCommentId").is(postOrCommentId);
-		Query query = new Query(criteria);
-		template.remove(query, Like.class);
 	}
 	
 }

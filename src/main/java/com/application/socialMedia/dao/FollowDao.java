@@ -32,6 +32,7 @@ public class FollowDao {
     @Autowired
     MongoTemplate template;
 
+	/*add a request in the array of follower request */
     public void addFollowerToFollowerList(String followerId, String followingId) {
  
 		Criteria criteria = Criteria.where("pageId").is(followingId);
@@ -42,6 +43,7 @@ public class FollowDao {
 		template.updateFirst(query, update, FollowRequest.class);
 	}
 
+	/*remove a request in the array of follower request */
     public void removeFollowerToFollowerList(String followerId, String followingId) {
  
 		Criteria criteria = Criteria.where("pageId").is(followingId);
@@ -52,6 +54,7 @@ public class FollowDao {
 		template.updateFirst(query, update, FollowRequest.class);
 	}
 
+	/*remove follower and following in collection */
 	public void deleteFollowDetails(FollowDetail followDetail) {
  
 		Criteria criteria = Criteria.where("followingId").is(followDetail.getFollowingId()).andOperator(Criteria.where("followerId").is(followDetail.getFollowerId()));
@@ -60,6 +63,7 @@ public class FollowDao {
 
 	}
 
+	/*find the mutual friends by finding common following between two users*/
 	public List<Page> findMutualFollowing(String id1,String id2) {
 		MatchOperation match1 =  Aggregation.match(new Criteria().orOperator(
 								Criteria.where("followerId").is(new ObjectId(id1)),
@@ -95,6 +99,7 @@ public class FollowDao {
         }
     }
 
+	/*this method returns the post of the following of a particular page in order of latest posted date */
 	public List<Post> getFollowingPost(String followerId){
 		MatchOperation match1 =  Aggregation.match(Criteria.where("followerId").is(new ObjectId(followerId)));
 		LookupOperation lookUp = Aggregation.lookup("posts", "followingId", "pageId", "followerpost");

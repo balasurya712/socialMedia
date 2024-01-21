@@ -15,6 +15,7 @@ public class PageReportDao {
     @Autowired
     MongoTemplate template;
 
+    /*delete the page report */
     public void deleteByPageId(String id){
         Criteria criteria = Criteria.where("pageId").is(new ObjectId(id));
 		Query query = new Query(criteria);

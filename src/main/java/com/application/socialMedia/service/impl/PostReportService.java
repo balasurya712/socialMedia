@@ -43,4 +43,8 @@ public class PostReportService implements PostReportServiceInterface{
         postRepo.deleteById(postId);
         return true;
     }
+
+    public Boolean deleteAllPost(String pageId){
+        return true;
+    }
 }

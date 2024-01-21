@@ -40,7 +40,7 @@ public class PostController {
         return new ResponseEntity<List<Post>>(service.recommendedPost(),HttpStatus.OK);
     }
 
-    @GetMapping("f_post")
+    @GetMapping("following_post")
     public ResponseEntity<List<Post>> getFollowingPost(@RequestParam String id) {
         return new ResponseEntity<List<Post>>(service.getFollowingPost(id),HttpStatus.OK);
     }
@@ -48,5 +48,10 @@ public class PostController {
     @DeleteMapping("delete_post")
     public ResponseEntity<?> deletePost(@RequestParam String id) {
         return new ResponseEntity<>(service.delete(id),HttpStatus.OK);
+    }
+
+    @DeleteMapping("delete_post_by_page")
+    public ResponseEntity<?> deletePostByPage(@RequestParam String id) {
+        return new ResponseEntity<>(service.deleteByPageId(id),HttpStatus.OK);
     }
 }

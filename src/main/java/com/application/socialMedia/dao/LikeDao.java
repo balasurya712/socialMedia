@@ -31,4 +31,11 @@ public class LikeDao {
 		return template.find(query, Like.class);
 
 	}
+
+	public void deleteAllLikeByPostOrComment(String postOrCommentId){
+		Criteria criteria = Criteria.where("postOrCommentId").is(postOrCommentId);
+		Query query = new Query(criteria);
+		template.remove(query, Like.class);
+	}
+	
 }

@@ -25,16 +25,12 @@ import com.application.socialMedia.model.FollowDetail;
 import com.application.socialMedia.model.FollowRequest;
 import com.application.socialMedia.model.Page;
 import com.application.socialMedia.model.Post;
-import com.application.socialMedia.repository.PageRepository;
 
 @Repository
 public class FollowDao {
 
     @Autowired
     MongoTemplate template;
-
-	@Autowired
-	PageRepository repo;
 
     public void addFollowerToFollowerList(String followerId, String followingId) {
  
@@ -64,47 +60,6 @@ public class FollowDao {
 
 	}
 
-	// public AggregationResults<String> mutualFrinds(String id1,String id2) {
- 
-	// 	// [{ $match: 
-	// 	// 	{ $or: [ 
-	// 	// 	{ followerId: '65a6558bfed7a90a9f1ed1f0' },
-	// 	// 	{ followerId: '65a65586fed7a90a9f1ed1ed' }
-	// 	//   ] } },
-	// 	//  {
-	// 	//    $group: {
-	// 	// 	 _id: "$followerId",
-	// 	// 	 following: {
-	// 	// 	   $push : "$followingId"
-	// 	// 	 }
-	// 	//    }
-	// 	//  },
-	// 	//    {    $group: {
-	// 	// 		 _id:null,
-	// 	// 		 following1: { $first: "$following" },
-	// 	// 		 following2: { $last: "$following" }
-	// 	// 		 }
-	// 	// 	},
-	// 	//  {    $project:{
-	// 	// 			   _id:0,
-	// 	// 		mutual_following:{
-	// 	// 		$setIntersection:["$following1","$following2"]
-	// 	// 		}
-	// 	// 		 }
-	// 	// 	}
-	// 	// ]
-	// 	GroupOperation groupByStateAndSumPop = Aggregation.group("state").accumulate(null).as("statePop");
-	// 	MatchOperation filterStates = Aggregation.match(new Criteria("statePop").gt(10000000));
-
-	// 	Aggregation aggregation = Aggregation.newAggregation(groupByStateAndSumPop,filterStates);
-
-	// 	AggregationResults<String> result=template.aggregate(aggregation, "follow_details",String.class);
-
-		
-	// 	return result;
-	// }
-
-
 	public List<Page> findMutualFollowing(String id1,String id2) {
 		MatchOperation match1 =  Aggregation.match(new Criteria().orOperator(
 								Criteria.where("followerId").is(new ObjectId(id1)),
@@ -125,15 +80,6 @@ public class FollowDao {
 		.andExpression("'$mutual._class'").as("_class");
 		Aggregation aggregation = Aggregation.newAggregation(match1,lookUp,unwind,projectStage);
 		List<Page> output = template.aggregate(aggregation, "follow_details", Page.class).getMappedResults();
-		// List<String> output1 = template.aggregate(aggregation, "follow_details", String.class).getMappedResults();
-		// System.out.println("o1  "+output1);
-		// System.out.println("o  "+output);
-		// System.out.println(followDetail.getFollowerId() + "    "+followDetail.getFollowingId());
-
-		// String result = output.get(0);
-
-		// String followingJsonArray = result.substring(result.indexOf('[') + 2, result.lastIndexOf(']')-1);
-        // List<String> followingArray = new ArrayList<>(List.of(followingJsonArray.split("\", \"")));
 		List<Page> mutualFollower = new ArrayList<>();
 		HashSet<Page> set = new HashSet<>();
         for (Page value : output) {
@@ -165,9 +111,6 @@ public class FollowDao {
 		.and("followerpost.date_and_time").as("date_and_time");
 		Aggregation aggregation = Aggregation.newAggregation(match1,lookUp,unwind,sortOperation,projection);
 		List<Post> output = template.aggregate(aggregation, "follow_details", Post.class).getMappedResults();
-		List<String> output1 = template.aggregate(aggregation, "follow_details", String.class).getMappedResults();
-		System.out.println(output);
-		System.out.println(output1);
 		return output;
 	}
 }

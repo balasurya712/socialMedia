@@ -3,6 +3,7 @@ package com.application.socialMedia.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -22,6 +23,9 @@ import com.application.socialMedia.model.Post;
 public class PostDao {
     @Autowired
     MongoTemplate template;
+
+	@Autowired
+	CommentDao commentDao;
 
     public void incLikeCount(String id) {
  
@@ -82,6 +86,18 @@ public class PostDao {
 		}
 
 		return output;
+	}
+
+	public void deletePostByPageId(String id) {
+ 
+		Criteria criteria = Criteria.where("pageId").is(new ObjectId(id));
+		Query query = new Query(criteria);
+		List<Post> posts = template.find(query, Post.class);
+		for(Post post:posts){
+			commentDao.deleteAllLikesAndCommentByPostOrCommentId(post.get_id());
+		}
+		template.remove(query, Post.class);
+
 	}
 
 }

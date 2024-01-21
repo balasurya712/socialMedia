@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import com.application.socialMedia.model.Comment;
+import com.application.socialMedia.model.Like;
 
 
 @Repository
@@ -72,5 +73,23 @@ public class CommentDao {
 		Update update = new Update().inc("commentCount", -1);
  
 		template.updateFirst(query, update, Comment.class);
+	}
+
+	public void deleteAllLikesAndCommentByPostOrCommentId(String postOrcommentId){
+		Criteria criteria = Criteria.where("postOrCommentId").is(postOrcommentId);
+		Query query = new Query(criteria);
+		template.remove(query, Like.class);
+		List<Comment> comments =  template.find(query, Comment.class);
+
+		if(comments.isEmpty()){
+			return;
+		}
+
+		for(Comment comment:comments){
+			deleteAllLikesAndCommentByPostOrCommentId(comment.get_id());
+		}
+
+		template.remove(query,Comment.class);
+		
 	}
 }

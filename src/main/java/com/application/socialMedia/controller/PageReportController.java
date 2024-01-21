@@ -8,11 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.application.socialMedia.model.PageReport;
 import com.application.socialMedia.service.impl.PageReportService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 
 
@@ -29,11 +31,21 @@ public class PageReportController {
         return new ResponseEntity<PageReport>(service.report(page), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('CONTENT_MODERATOR')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("view_report")
     public ResponseEntity<List<PageReport>> viewReport() {
         return new ResponseEntity<List<PageReport>>(service.viewReport(), HttpStatus.OK);  
     }
     
-    
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("delete_report")
+    public ResponseEntity<Boolean> deleteReport(@RequestParam String pageId) {
+        return new ResponseEntity<Boolean>(service.deleteReport(pageId), HttpStatus.OK);  
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("delete_report_page")
+    public ResponseEntity<Boolean> deleteReportAndPage(@RequestParam String pageId) {
+        return new ResponseEntity<Boolean>(service.deleteReportAndPage(pageId), HttpStatus.OK);  
+    }
 }

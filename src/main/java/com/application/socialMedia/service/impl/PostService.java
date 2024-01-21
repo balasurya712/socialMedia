@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.application.socialMedia.dao.CommentDao;
 import com.application.socialMedia.dao.FollowDao;
+// import com.application.socialMedia.dao.LikeDao;
 import com.application.socialMedia.dao.PostDao;
 import com.application.socialMedia.model.Post;
 import com.application.socialMedia.model.response_model.PostResponse;
@@ -30,6 +32,12 @@ public class PostService implements PostServiceInterface {
 
     @Autowired
     PageRepository pageRepo;
+
+    // @Autowired
+    // LikeDao likeDao;
+
+    @Autowired
+    CommentDao commentDao;
 
     @Override
     public Post save(PostResponse postResponse) {
@@ -60,7 +68,14 @@ public class PostService implements PostServiceInterface {
     }
 
     public boolean delete(String id){
+        commentDao.deleteAllLikesAndCommentByPostOrCommentId(id);
+        // likeDao.deleteAllLikeByPostOrComment(id);
         repo.deleteById(id);
+        return true;
+    }
+
+    public Boolean deleteByPageId(String pageId){
+        postDao.deletePostByPageId(pageId);
         return true;
     }
 

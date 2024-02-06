@@ -69,7 +69,29 @@ public class PostDao {
 		template.updateFirst(query, update, Post.class);
 	}
 
-	public List<Post> recommendPost(){
+	public List<Post> recommendPost(Integer limit){
+
+		Query query = new Query();
+		query.with(Sort.by(Sort.Order.desc("likeCount"),Sort.Order.desc("commentCount")));
+		query.limit(limit);
+		return template.find(query, Post.class);
+		
+		// ArrayList<Post> output = new ArrayList<>( template.aggregate(aggregation, "posts", Post.class).getMappedResults());
+
+		// int index = 0;
+		// while (index < output.size()) {
+		// 	if(output.get(index).getPageId().getPage_privacy().equals("private")){
+		// 		System.out.println(output.get(index).getPageId().getPage_privacy().equals("private")+"  "+output.get(index).getPageId().getPage_privacy());
+		// 		output.remove(index);
+		// 		// continue;
+		// 	}
+		// 	index++;
+		// }
+
+		// return output;
+	}
+
+	public List<Post> recommendPostWithLikeCount(){
 		AddFieldsOperation fieldsOperation = Aggregation.addFields().addField("total").withValue(ArithmeticOperators.Add.valueOf("likeCount").add("commentCount")).build();
 		SortOperation sortOperation = Aggregation.sort(Sort.by(Direction.DESC,"total"));
 		Aggregation aggregation = Aggregation.newAggregation(fieldsOperation, sortOperation);

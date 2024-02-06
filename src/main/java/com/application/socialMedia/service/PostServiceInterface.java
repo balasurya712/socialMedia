@@ -7,7 +7,7 @@ import com.application.socialMedia.model.response_model.PostResponse;
 
 public interface PostServiceInterface {
     Post save(PostResponse postResponse);
-    List<Post> recommendedPost();
+    List<Post> recommendedPost(Integer limit);
     boolean delete(String id);
     Boolean deleteByPageId(String pageId);
 }

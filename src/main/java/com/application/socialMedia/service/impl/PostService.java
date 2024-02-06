@@ -59,8 +59,8 @@ public class PostService implements PostServiceInterface {
         return repo.save(post);
     }
     @Override
-    public List<Post> recommendedPost() {
-        return postDao.recommendPost();
+    public List<Post> recommendedPost(Integer limit) {
+        return postDao.recommendPost(limit);
     }
 
     public List<Post> getFollowingPost(String id) {

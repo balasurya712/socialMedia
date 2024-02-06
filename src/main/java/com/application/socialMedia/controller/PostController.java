@@ -36,8 +36,8 @@ public class PostController {
     }
     
     @GetMapping("recommended_post")
-    public ResponseEntity<List<Post>> getMethodName() {
-        return new ResponseEntity<List<Post>>(service.recommendedPost(),HttpStatus.OK);
+    public ResponseEntity<List<Post>> getMethodName(@RequestParam Integer limit) {
+        return new ResponseEntity<List<Post>>(service.recommendedPost(limit),HttpStatus.OK);
     }
 
     @GetMapping("following_post")

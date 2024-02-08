@@ -16,10 +16,11 @@ import com.application.socialMedia.service.impl.PostService;
 
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 
-
+@CrossOrigin("*")
 @Controller
 @RequestMapping(path = "post")
 public class PostController {
@@ -42,6 +43,7 @@ public class PostController {
 
     @GetMapping("following_post")
     public ResponseEntity<List<Post>> getFollowingPost(@RequestParam String id) {
+        System.out.println("id "+ id);
         return new ResponseEntity<List<Post>>(service.getFollowingPost(id),HttpStatus.OK);
     }
     

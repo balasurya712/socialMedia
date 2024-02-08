@@ -24,10 +24,11 @@ public class AuthenticationController {
     AuthenticationService service;
     //Register Method call
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody User request) {
+    public ResponseEntity<TokenResponse> register(@RequestBody User request) {
         
-        
-        return ResponseEntity.ok(service.register(request));
+        TokenResponse tr = new TokenResponse();
+        tr.setToken(service.register(request));
+        return ResponseEntity.ok(tr);
     }
     
 

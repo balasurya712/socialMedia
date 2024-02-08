@@ -132,4 +132,8 @@ public class PageService implements PageServiceInterface {
     public List<Page> mutualFriends(String id1,String id2){
         return followDao.findMutualFollowing(id1,id2);
     }
+
+    public Page findPageByName(String name){
+        return repo.findByName(name).get();
+    }
 }

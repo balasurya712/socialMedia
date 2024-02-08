@@ -40,6 +40,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public String register(User user) {
+        String id="";
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         if (userRepo.existsByName(user.getName())) {
             throw new RuntimeException("Email already exists");
@@ -51,16 +52,20 @@ public class AuthenticationService {
                 user.setRole(Role.CONTENT_MODERATOR);
         } else {
             user.setRole(Role.USER);
+            Page page = new Page();
+            page.setName(user.getName());
+            page = pageRepo.save(page);
+            FollowRequest req = new FollowRequest();
+            req.setPageId(page.get_id());
+            req.setRequestedId(new ArrayList<>());
+            followRepo.save(req);
+            id=page.get_id();
         }
-        userRepo.save(user);
-        Page page = new Page();
-        page.setName(user.getName());
-        page = pageRepo.save(page);
-        FollowRequest req = new FollowRequest();
-        req.setPageId(page.get_id());
-        req.setRequestedId(new ArrayList<>());
-        followRepo.save(req);
-        String jwt = jwtService.generateToken(user);
+        user = userRepo.save(user);
+        if(id.equals("")){
+            id=user.getId();
+        }
+        String jwt = jwtService.generateToken(user,user.getId());
         return jwt;
     }
 
@@ -70,7 +75,11 @@ public class AuthenticationService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getName(), request.getPassword()));
         User user = userRepo.findByName(request.getName()).orElseThrow(()-> new UsernameNotFoundException("User not Found"));
-        String jwt = jwtService.generateToken(user);
+        String id=user.getId();
+        if(user.getRole().equals(Role.USER)){
+           id = pageRepo.findByName(user.getName()).get().get_id();
+        }
+        String jwt = jwtService.generateToken(user,id);
         return jwt;
 
     }
